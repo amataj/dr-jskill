@@ -58,12 +58,14 @@ my-spring-boot-app/
 │   ├── vite.config.js          # Vite configuration
 │   ├── package.json            # Node dependencies
 │   └── .gitignore
-├── src/
-│   └── main/
-│       ├── java/               # Spring Boot backend
-│       └── resources/
-│           └── static/         # Production build output (auto-generated)
-└── pom.xml
+├── backend/                         # Boot application
+│   ├── src/
+│   │   └── main/
+│   │   ├── java/                    # Spring Boot backend
+│   │   └── resources/
+│   │      └── static/              # Production build output (auto-generated)
+│   └──  pom.xml                    # pom for the bacend app
+└── pom.xml                         # pom for the whole project
 ```
 
 ## Setup Instructions

@@ -63,8 +63,8 @@ my-spring-boot-app/
 │   ├── tsconfig.json                # TypeScript config
 │   └── .gitignore
 │   └──  pom.xml                     # pom for the frontend app using the frontend Maven plugin
-├── backend/                         # Angular application
-    ├── src/
+├── backend/                         # Spring Boot application
+│   ├── src/
 │   │   └── main/
 │   │   ├── java/                    # Spring Boot backend
 │   │   └── resources/
