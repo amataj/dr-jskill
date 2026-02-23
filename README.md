@@ -187,13 +187,16 @@ Codex loads skills from `$CODEX_HOME/skills` (default: `~/.codex/skills`). The s
 
 **Option B — Install from GitHub:**
 
-Run the install script from this repo (installs [amataj/dr-jskill](https://github.com/amataj/dr-jskill) `main` branch into `~/.codex/skills/dr-jskill`):
+Run the install script from this repo (installs [amataj/dr-jskill](https://github.com/amataj/dr-jskill) into `~/.codex/skills/dr-jskill`):
    ```bash
-   ./scripts/install-dr-jskill-codex.sh
+   ./scripts/install-dr-jskill-codex.sh              # default: main branch
+   ./scripts/install-dr-jskill-codex.sh -b main     # explicit branch
+   ./scripts/install-dr-jskill-codex.sh -b backend_module_same_level_as_frontend
    ```
    Use `--force` to replace an existing installation:
    ```bash
    ./scripts/install-dr-jskill-codex.sh --force
+   ./scripts/install-dr-jskill-codex.sh -b my-branch --force
    ```
    Alternatively, if you have the Codex skill-installer, you can install from any repo/branch:
    ```bash

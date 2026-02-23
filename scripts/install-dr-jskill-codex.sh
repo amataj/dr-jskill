@@ -1,7 +1,8 @@
 #!/usr/bin/env sh
-# Install dr-jskill into Codex skills from GitHub (amataj/dr-jskill, main branch).
-# Usage: ./scripts/install-dr-jskill-codex.sh [--force]
-#   --force  Remove existing ~/.codex/skills/dr-jskill and reinstall.
+# Install dr-jskill into Codex skills from GitHub (amataj/dr-jskill).
+# Usage: ./scripts/install-dr-jskill-codex.sh [-b <branch>] [--force]
+#   -b <branch>  Branch to clone (default: main).
+#   --force      Remove existing ~/.codex/skills/dr-jskill and reinstall.
 
 set -e
 
@@ -13,9 +14,28 @@ SKILLS_DIR="$CODEX_HOME/skills"
 TARGET="$SKILLS_DIR/$SKILL_NAME"
 
 FORCE=""
-if [ "${1:-}" = "--force" ]; then
-  FORCE=1
-fi
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -b)
+      shift
+      if [ -z "${1:-}" ]; then
+        echo "Error: -b requires a branch name"
+        exit 1
+      fi
+      BRANCH="$1"
+      shift
+      ;;
+    --force)
+      FORCE=1
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [-b <branch>] [--force]"
+      exit 1
+      ;;
+  esac
+done
 
 if [ -d "$TARGET" ]; then
   if [ -n "$FORCE" ]; then
