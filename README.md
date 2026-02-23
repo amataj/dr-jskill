@@ -187,13 +187,17 @@ Codex loads skills from `$CODEX_HOME/skills` (default: `~/.codex/skills`). The s
 
 **Option B — Install from GitHub:**
 
-If you have the Codex skill-installer, install the upstream skill:
+Run the install script from this repo (installs [amataj/dr-jskill](https://github.com/amataj/dr-jskill) `main` branch into `~/.codex/skills/dr-jskill`):
    ```bash
-   python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo jdubois/dr-jskill
+   ./scripts/install-dr-jskill-codex.sh
    ```
-   For a specific branch (e.g. `backend_module_same_level_as_frontend`):
+   Use `--force` to replace an existing installation:
    ```bash
-   python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo jdubois/dr-jskill --ref backend_module_same_level_as_frontend
+   ./scripts/install-dr-jskill-codex.sh --force
+   ```
+   Alternatively, if you have the Codex skill-installer, you can install from any repo/branch:
+   ```bash
+   python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo amataj/dr-jskill --ref main
    ```
 
 2. **Restart Codex** so it picks up the new skill.
