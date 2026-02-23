@@ -5,7 +5,7 @@
     <td>
       <p><strong>An Agent Skill for creating Spring Boot applications following Julien Dubois' best practices.</strong></p>
       <p>Generate Spring Boot 4.x projects with Java 25, PostgreSQL, Docker support, and your choice of front-end framework (Vue.js, React, Angular, or Vanilla JS).</p>
-      <p>Dr JSkill is an agent skill: it is meant to work with tools like GitHub Copliot CLI or Claude Code.
+      <p>Dr JSkill is an agent skill: it is meant to work with tools like Codex, GitHub Copilot CLI, or Claude Code.
       </p>
     </td>
     <td align="right" valign="middle" width="340">
@@ -167,6 +167,50 @@ Skills are automatically discovered from configured skill directories.
 3. Restart VS Code
 
 Claude Code will automatically discover all skills in the configured directory and load them when relevant to your task.
+
+### Codex
+
+Codex loads skills from `$CODEX_HOME/skills` (default: `~/.codex/skills`). The skill directory must be named `dr-jskill`.
+
+**Option A — Use a local clone (e.g. this repo):**
+
+1. Create the skills directory and link or copy the skill root (the folder that contains `SKILL.md`, `scripts/`, `references/`, `assets/`):
+   ```bash
+   mkdir -p ~/.codex/skills
+   ln -s "/path/to/your/dr-jskill/clone" ~/.codex/skills/dr-jskill
+   ```
+   Or copy instead of symlinking:
+   ```bash
+   mkdir -p ~/.codex/skills
+   cp -R "/path/to/your/dr-jskill/clone" ~/.codex/skills/dr-jskill
+   ```
+
+**Option B — Install from GitHub:**
+
+If you have the Codex skill-installer, install the upstream skill:
+   ```bash
+   python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo jdubois/dr-jskill
+   ```
+   For a specific branch (e.g. `backend_module_same_level_as_frontend`):
+   ```bash
+   python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py --repo jdubois/dr-jskill --ref backend_module_same_level_as_frontend
+   ```
+
+2. **Restart Codex** so it picks up the new skill.
+
+3. **Create a project** by asking Codex in natural language, for example:
+   - *"Use dr-jskill to create a new Spring Boot project."*
+   - *"Create a new Todo List app with Dr JSkill — add/edit/remove todos, store in DB, no security."*
+   - *"Use the Spring Boot skill to generate a full-stack app named myapp, group com.myco, with Vue frontend."*
+
+   Codex will use the skill’s instructions and run the creation script (e.g. `node scripts/create-project-latest.mjs ...`) from the skill directory. The new project is created in the **current working directory** where you invoked Codex.
+
+4. **Run the generated application:**
+   ```bash
+   cd <project-name>
+   ./mvnw spring-boot:run
+   ```
+   For fullstack projects, PostgreSQL starts automatically via Docker Compose when you run the app.
 
 ### Other Compatible Assistants
 
