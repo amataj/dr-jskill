@@ -35,6 +35,13 @@ Centralized versions live in `versions.json`. All scripts read from it via `scri
 ### Using the Scripts
 This skill includes cross-platform JavaScript (Node.js) scripts in the `scripts/` directory that can be used to download pre-configured Spring Boot projects from start.spring.io. They work on Linux, macOS, and Windows.
 
+**Working directory / project location**
+
+- Always run the project creation scripts from the **directory where the user wants the new project folder to be created**.
+- When using Codex (CLI), this means:
+  - Respect the shell working directory (or the directory set via `codex -C /path/to/dir`).
+  - Invoke the Node scripts from that directory so the generated Spring Boot project appears as a new subdirectory there (e.g. `./my-app`).
+
 **Unified launcher (cross-platform):**
 ```bash
 node scripts/create-project my-app com.myco my-app com.myco.myapp 21 fullstack
