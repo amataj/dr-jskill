@@ -62,12 +62,15 @@ my-spring-boot-app/
 │   ├── package.json                 # Node dependencies
 │   ├── tsconfig.json                # TypeScript config
 │   └── .gitignore
-├── src/
-│   └── main/
-│       ├── java/                    # Spring Boot backend
-│       └── resources/
-│           └── static/              # Production build output (auto-generated)
-└── pom.xml
+│   └──  pom.xml                     # pom for the frontend app using the frontend Maven plugin
+├── backend/                         # Angular application
+    ├── src/
+│   │   └── main/
+│   │   ├── java/                    # Spring Boot backend
+│   │   └── resources/
+│   │      └── static/              # Production build output (auto-generated)
+│   └──  pom.xml                    # pom for the bacend app
+└── pom.xml                         # pom for the whole project
 ```
 
 ## Setup Instructions
