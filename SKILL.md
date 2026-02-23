@@ -32,6 +32,19 @@ Centralized versions live in `versions.json`. All scripts read from it via `scri
 
 ## Usage
 
+### Required First Question (Project Creation)
+
+When the user asks to create a new project, follow this interaction flow:
+
+1. Ask this question first: **"What is the project name?"**
+2. Wait for the user's answer before running any generation script.
+3. Use the answer as:
+   - `PROJECT_NAME` (the generated folder name)
+   - `artifactId` (project name in generated metadata)
+4. If other values are missing (groupId, package, type), use skill defaults or ask follow-up questions.
+
+This guarantees the generated project folder and project name come from the user-provided project name.
+
 ### Using the Scripts
 This skill includes cross-platform JavaScript (Node.js) scripts in the `scripts/` directory that can be used to download pre-configured Spring Boot projects from start.spring.io. They work on Linux, macOS, and Windows.
 
