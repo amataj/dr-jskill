@@ -21,7 +21,7 @@
 
 ## Spring Boot Configuration
 
-`src/main/resources/application.properties`:
+`src/main/resources/application.yml`:
 ```properties
 # Datasource
 spring.datasource.url=jdbc:postgresql://localhost:5432/mydb

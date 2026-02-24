@@ -497,7 +497,7 @@ record AuthResponse(String token) {}
 ### Configuration Properties
 
 ```properties
-# application.properties
+# application.yml
 jwt.secret=${JWT_SECRET}
 jwt.expiration=86400000
 

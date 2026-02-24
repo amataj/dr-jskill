@@ -171,7 +171,7 @@ my-spring-boot-app/
 │   │       │   ├── js/
 │   │       │   │   └── app.js
 │   │       │   └── images/
-│   │       └── application.properties
+│   │       └── application.yml
 │   └── test/
 │       └── java/
 │           └── com/example/app/

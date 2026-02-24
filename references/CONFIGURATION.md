@@ -35,7 +35,7 @@ Spring Boot supports both `.properties` and `.yaml` files. **We recommend proper
 - Easier to search and grep
 - Better Git diff visualization
 
-**Example: `application.properties`**
+**Example: `application.yml`**
 
 ```properties
 # Server Configuration
@@ -101,7 +101,7 @@ Create separate property files for each environment:
 
 ```
 src/main/resources/
-├── application.properties          # Default configuration
+├── application.yml          # Default configuration
 ├── application-dev.properties      # Development overrides
 ├── application-test.properties     # Test overrides
 └── application-prod.properties     # Production overrides
@@ -158,7 +158,7 @@ java -jar app.jar
 docker run -e SPRING_PROFILES_ACTIVE=prod -p 8080:8080 myapp:latest
 ```
 
-**Via application.properties (not recommended for production):**
+**Via application.yml (not recommended for production):**
 
 ```properties
 spring.profiles.active=dev
@@ -194,7 +194,7 @@ Spring Boot loads configuration in the following order (later sources override e
 
 1. Default properties (SpringApplication.setDefaultProperties)
 2. `@PropertySource` annotations
-3. Config data files (`application.properties`)
+3. Config data files (`application.yml`)
 4. Profile-specific config files (`application-{profile}.properties`)
 5. OS environment variables
 6. Java System properties
@@ -218,10 +218,10 @@ app.api.secret=${API_SECRET}
 **Convention:** Environment variables use UPPERCASE with underscores:
 
 ```bash
-# application.properties: server.port
+# application.yml: server.port
 export SERVER_PORT=8080
 
-# application.properties: spring.datasource.url
+# application.yml: spring.datasource.url
 export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/mydb
 ```
 
@@ -323,7 +323,7 @@ public class ApiController {
 }
 ```
 
-**Configuration in application.properties:**
+**Configuration in application.yml:**
 
 ```properties
 app.name=My Application
@@ -382,7 +382,7 @@ Add validation dependency:
 **❌ NEVER do this:**
 
 ```properties
-# application.properties - WRONG!
+# application.yml - WRONG!
 spring.datasource.password=mysecretpassword
 app.api.key=abc123xyz
 ```
@@ -390,7 +390,7 @@ app.api.key=abc123xyz
 **✅ DO this instead:**
 
 ```properties
-# application.properties - CORRECT!
+# application.yml - CORRECT!
 spring.datasource.password=${DATABASE_PASSWORD}
 app.api.key=${API_KEY}
 ```

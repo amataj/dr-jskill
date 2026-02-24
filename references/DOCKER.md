@@ -108,7 +108,7 @@ Add the dependency to your `pom.xml` (included by default in full-stack projects
 </dependency>
 ```
 
-You can customize behavior in `application.properties`:
+You can customize behavior in `application.yml`:
 
 ```properties
 # Disable Docker Compose support
