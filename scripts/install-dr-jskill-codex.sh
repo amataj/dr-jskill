@@ -2,7 +2,7 @@
 # Install dr-jskill into Codex skills from GitHub (amataj/dr-jskill).
 # Usage: ./scripts/install-dr-jskill-codex.sh [-b <branch> | -c] [--force]
 #   -b <branch>  Branch to clone (default: main).
-#   -c           Use the current git branch name of this repo.
+#   -c           Install from the current local project copy (no git clone).
 #   --force      Remove existing ~/.codex/skills/dr-jskill and reinstall.
 
 set -e
@@ -18,7 +18,7 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 REPO_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 
 FORCE=""
-USE_CURRENT_BRANCH=""
+USE_CURRENT_COPY=""
 EXPLICIT_BRANCH=""
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -33,7 +33,7 @@ while [ $# -gt 0 ]; do
       shift
       ;;
     -c)
-      USE_CURRENT_BRANCH=1
+      USE_CURRENT_COPY=1
       shift
       ;;
     --force)
@@ -48,7 +48,7 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-if [ -n "$USE_CURRENT_BRANCH" ] && [ -n "$EXPLICIT_BRANCH" ]; then
+if [ -n "$USE_CURRENT_COPY" ] && [ -n "$EXPLICIT_BRANCH" ]; then
   echo "Error: use either -b <branch> or -c, not both."
   exit 1
 fi
@@ -64,23 +64,21 @@ if [ -d "$TARGET" ]; then
   fi
 fi
 
-if ! command -v git >/dev/null 2>&1; then
-  echo "Error: git is required to install the skill."
-  exit 1
-fi
+mkdir -p "$SKILLS_DIR"
 
-if [ -n "$USE_CURRENT_BRANCH" ]; then
-  CURRENT_BRANCH=$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD 2>/dev/null || true)
-  if [ -z "$CURRENT_BRANCH" ] || [ "$CURRENT_BRANCH" = "HEAD" ]; then
-    echo "Error: could not determine current git branch for $REPO_ROOT"
+if [ -n "$USE_CURRENT_COPY" ]; then
+  echo "Installing dr-jskill from current local copy: $REPO_ROOT"
+  mkdir -p "$TARGET"
+  cp -R "$REPO_ROOT"/. "$TARGET"/
+else
+  if ! command -v git >/dev/null 2>&1; then
+    echo "Error: git is required to install the skill from GitHub."
     exit 1
   fi
-  BRANCH="$CURRENT_BRANCH"
-fi
 
-echo "Installing dr-jskill from $REPO_URL (branch: $BRANCH) into Codex skills..."
-mkdir -p "$SKILLS_DIR"
-git clone --branch "$BRANCH" --single-branch --depth 1 "$REPO_URL" "$TARGET"
+  echo "Installing dr-jskill from $REPO_URL (branch: $BRANCH) into Codex skills..."
+  git clone --branch "$BRANCH" --single-branch --depth 1 "$REPO_URL" "$TARGET"
+fi
 
 echo ""
 echo "Done. dr-jskill is installed at $TARGET"
