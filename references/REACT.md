@@ -44,30 +44,26 @@ This guide covers creating front-end applications for Spring Boot using React 18
 
 ## Project Structure
 
-```
-my-spring-boot-app/
-├── frontend/                    # React application
-│   ├── src/
-│   │   ├── main.jsx            # React entry point
-│   │   ├── App.jsx             # Root component
-│   │   ├── components/         # React components
-│   │   ├── pages/              # Page components
-│   │   ├── hooks/              # Custom hooks
-│   │   ├── context/            # Context providers
-│   │   └── services/           # API services
-│   ├── public/                 # Public assets
-│   ├── index.html              # HTML entry point
-│   ├── vite.config.js          # Vite configuration
-│   ├── package.json            # Node dependencies
-│   └── .gitignore
-├── backend/                         # Spring Boot application
-│   ├── src/
-│   │   └── main/
-│   │   ├── java/                    # Spring Boot backend
-│   │   └── resources/
-│   │      └── static/              # Production build output (auto-generated)
-│   └──  pom.xml                    # pom for the bacend app
-└── pom.xml                         # pom for the whole project
+```text
+frontend/
+|-- index.html
+|-- package.json
+|-- .gitignore
+|-- vite.config.js
+|-- eslint.config.js
+|-- jsconfig.json
+|-- public/
+|   `-- ...
+`-- src/
+    |-- main.jsx
+    |-- App.jsx
+    |-- assets/
+    |-- components/
+    |-- pages/
+    |-- hooks/
+    |-- context/
+    |-- services/
+    `-- router/
 ```
 
 ## Setup Instructions

@@ -43,29 +43,23 @@ This guide covers creating front-end applications for Spring Boot using plain Ja
 
 ## Project Structure
 
-```
-my-spring-boot-app/
-├── frontend/                    # Vanilla JS application
-│   ├── src/
-│   │   ├── main.js             # Application entry point
-│   │   ├── router.js           # Client-side routing
-│   │   ├── components/         # UI components
-│   │   ├── pages/              # Page components
-│   │   ├── services/           # API services
-│   │   └── utils/              # Utility functions
-│   ├── public/                 # Public assets
-│   ├── index.html              # HTML entry point
-│   ├── vite.config.js          # Vite configuration
-│   ├── package.json            # Node dependencies
-│   └── .gitignore
-├── backend/                         # Boot application
-│   ├── src/
-│   │   └── main/
-│   │   ├── java/                    # Spring Boot backend
-│   │   └── resources/
-│   │      └── static/              # Production build output (auto-generated)
-│   └──  pom.xml                    # pom for the bacend app
-└── pom.xml                         # pom for the whole project
+```text
+frontend/
+|-- index.html
+|-- package.json
+|-- .gitignore
+|-- vite.config.js
+|-- jsconfig.json
+|-- public/
+|   `-- ...
+`-- src/
+    |-- main.js
+    |-- router.js
+    |-- components/
+    |-- pages/
+    |-- services/
+    |-- utils/
+    `-- assets/
 ```
 
 ## Setup Instructions

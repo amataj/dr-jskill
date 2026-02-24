@@ -45,30 +45,24 @@ This guide covers creating front-end applications for Spring Boot using **Vue.js
 
 ## Project Structure
 
-```
-my-spring-boot-app/
-├── frontend/                    # Vue.js application
-│   ├── src/
-│   │   ├── main.js             # Vue entry point
-│   │   ├── App.vue             # Root component
-│   │   ├── components/         # Vue components
-│   │   ├── views/              # Page views
-│   │   ├── router/             # Vue Router
-│   │   ├── stores/             # Pinia stores (state management)
-│   │   └── services/           # API services
-│   ├── public/                 # Public assets
-│   ├── index.html              # HTML entry point
-│   ├── vite.config.js          # Vite configuration
-│   ├── package.json            # Node dependencies
-│   └── .gitignore
-├── backend/                         # Spring Boot application
-│   ├── src/
-│   │   └── main/
-│   │   ├── java/                    # Spring Boot backend
-│   │   └── resources/
-│   │      └── static/              # Production build output (auto-generated)
-│   └──  pom.xml                    # pom for the bacend app
-└── pom.xml                         # pom for the whole project
+```text
+frontend/
+|-- index.html
+|-- package.json
+|-- .gitignore
+|-- vite.config.js
+|-- jsconfig.json
+|-- public/
+|   `-- ...
+`-- src/
+    |-- main.js
+    |-- App.vue
+    |-- assets/
+    |-- components/
+    |-- views/
+    |-- router/
+    |-- stores/
+    `-- services/
 ```
 
 ## Setup Instructions

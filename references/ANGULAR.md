@@ -43,34 +43,41 @@ This guide covers creating front-end applications for Spring Boot using Angular 
 
 ## Project Structure
 
-```
-my-spring-boot-app/
-├── frontend/                    # Angular application
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── app.component.ts     # Root component
-│   │   │   ├── app.component.html   # Root template
-│   │   │   ├── app.routes.ts        # Routing configuration
-│   │   │   ├── components/          # Shared components
-│   │   │   ├── pages/               # Page components
-│   │   │   ├── services/            # Services and API calls
-│   │   │   └── models/              # TypeScript interfaces
-│   │   ├── index.html               # HTML entry point
-│   │   ├── main.ts                  # Angular bootstrap
-│   │   └── styles.css               # Global styles
-│   ├── angular.json                 # Angular configuration
-│   ├── package.json                 # Node dependencies
-│   ├── tsconfig.json                # TypeScript config
-│   └── .gitignore
-│   └──  pom.xml                     # pom for the frontend app using the frontend Maven plugin
-├── backend/                         # Spring Boot application
-│   ├── src/
-│   │   └── main/
-│   │   ├── java/                    # Spring Boot backend
-│   │   └── resources/
-│   │      └── static/              # Production build output (auto-generated)
-│   └──  pom.xml                    # pom for the bacend app
-└── pom.xml                         # pom for the whole project
+```text
+frontend/
+|-- angular.json
+|-- package.json
+|-- tsconfig.json
+|-- tsconfig.app.json
+|-- tsconfig.spec.json
+|-- .gitignore
+`-- src/
+    |-- index.html
+    |-- main.ts
+    |-- styles.css
+    |-- assets/
+    |-- environments/
+    |   |-- environment.ts
+    |   `-- environment.prod.ts
+    `-- app/
+        |-- app.component.ts
+        |-- app.component.html
+        |-- app.component.css
+        |-- app.config.ts
+        |-- app.routes.ts
+        |-- core/
+        |   |-- services/
+        |   |-- guards/
+        |   |-- interceptors/
+        |   `-- models/
+        |-- shared/
+        |   |-- components/
+        |   |-- directives/
+        |   `-- pipes/
+        `-- features/
+            |-- home/
+            |-- users/
+            `-- ...
 ```
 
 ## Setup Instructions
