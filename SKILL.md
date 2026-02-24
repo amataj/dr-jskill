@@ -32,18 +32,32 @@ Centralized versions live in `versions.json`. All scripts read from it via `scri
 
 ## Usage
 
-### Required First Question (Project Creation)
+### Required Questions (Project Creation)
 
 When the user asks to create a new project, follow this interaction flow:
 
 1. Ask this question first: **"What is the project name?"**
 2. Wait for the user's answer before running any generation script.
-3. Use the answer as:
+3. Ask: **"What type of project?"**
+   - `1- Frontend`
+   - `2- Backend`
+   - `3- Frontend + Backend`
+4. If the user selects `3- Frontend + Backend`, ask:
+   - **"How should the frontend and backend be structured?"**
+   - `1- Frontend and backend as separate modules under one parent`
+   - `2- Frontend under src/main/webapp`
+5. If the selected project type includes a frontend (`1` or `3`), ask:
+   - **"What is the Frontend Technology?"**
+   - `1- Angular`
+   - `2- React`
+   - `3- Vue`
+   - `4- Vanilla-JS`
+6. Use the project name answer as:
    - `PROJECT_NAME` (the generated folder name)
    - `artifactId` (project name in generated metadata)
-4. If other values are missing (groupId, package, type), use skill defaults or ask follow-up questions.
+7. If other values are missing (groupId, package), use skill defaults or ask follow-up questions.
 
-This guarantees the generated project folder and project name come from the user-provided project name.
+Do not skip these questions when creating a new project.
 
 ### Using the Scripts
 This skill includes cross-platform JavaScript (Node.js) scripts in the `scripts/` directory that can be used to download pre-configured Spring Boot projects from start.spring.io. They work on Linux, macOS, and Windows.
