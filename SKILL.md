@@ -52,10 +52,14 @@ When the user asks to create a new project, follow this interaction flow:
    - `2- React`
    - `3- Vue`
    - `4- Vanilla-JS`
-6. Use the project name answer as:
+6. If the selected project type includes a backend (`2` or `3`), ask:
+   - **"What type of backend architecture style?"**
+   - `1- Clean Architecture`
+   - `2- Layered Architecture.`
+7. Use the project name answer as:
    - `PROJECT_NAME` (the generated folder name)
    - `artifactId` (project name in generated metadata)
-7. If other values are missing (groupId, package), use skill defaults or ask follow-up questions.
+8. If other values are missing (groupId, package), use skill defaults or ask follow-up questions.
 
 Do not skip these questions when creating a new project.
 
