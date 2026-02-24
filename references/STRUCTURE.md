@@ -1,61 +1,77 @@
-# Project Structure
+# Supported Project Structures
 
-## frontend 
+This document defines the supported project layouts for generated projects.
 
-```
+## 1) Frontend-only (Maven-managed)
+
+Use this when the project is only a front-end application packaged with Maven.
+
+```text
 frontend-project-root/
-├── src/               # frontend application
-│   ├── index.html               # HTML entry point
-│   ├── package.json                 # Node dependencies
-│   └── .gitignore
-└──  pom.xml 
+|-- pom.xml
+|-- src/
+|   |-- index.html
+|   `-- ...
+|-- package.json
+`-- .gitignore
 ```
 
-## backend 
-```
-backend-project-root/            # Spring Boot application
-├── src/
-│   └── main/
-│   ├── java/                    # Spring Boot backend
-│   └── resources/
-│   └──  pom.xml                 # pom for the bacend app
-└── pom.xml                      # pom for the whole project
+## 2) Backend-only (Spring Boot)
+
+Use this for API/services without a separate front-end module.
+
+```text
+backend-project-root/
+|-- pom.xml
+`-- src/
+    |-- main/
+    |   |-- java/
+    |   `-- resources/
+    `-- test/
 ```
 
-## backend and frontend in the webapp folder within the src
-```
-backend-project-root/            # Spring Boot application
-├── src/
-│   └── main/
-│   ├── java/                    # Spring Boot backend
-│   └── resources/
-│   └── webapp/                   # frontend application source 
-│   │   ├── index.html               # HTML entry point
-│   │   ├── package.json                 # Node dependencies
-│   │   ── .gitignore
-│   └──  pom.xml                 # pom for the bacend app
-└── pom.xml                      # pom for the whole project
-```
+## 3) Single module: backend + frontend in `src/main/webapp`
 
+Use this when front-end assets are maintained inside the Spring Boot module.
 
-## frontend and backend in the same level
-
-```
+```text
 project-root/
-├── frontend/                    # frontend application
-│   ├── src/
-│   │   ├── index.html               # HTML entry point
-│   │   ├── main.ts                  # Angular bootstrap
-│   │   └── styles.css               # Global styles
-│   ├── package.json                 # Node dependencies
-│   └── .gitignore
-│   └──  pom.xml                     # pom for the frontend app using the frontend Maven plugin
-├── backend/                         # backend application
-│   ├── src/
-│   │   └── main/
-│   │   ├── java/                    # Spring Boot backend
-│   │   └── resources/
-│   │      └── static/              # Production build output (auto-generated)
-│   └──  pom.xml                    # pom for the bacend app
-└── pom.xml                         # pom for the whole project
+|-- pom.xml
+`-- src/
+    |-- main/
+    |   |-- java/
+    |   |-- resources/
+    |   `-- webapp/
+    |       |-- index.html
+    |       |-- package.json
+    |       `-- .gitignore
+    `-- test/
 ```
+
+## 4) Multi-module: frontend and backend at same level
+
+Use this when frontend and backend are separated into sibling modules.
+
+```text
+project-root/
+|-- pom.xml
+|-- frontend/
+|   |-- pom.xml
+|   |-- src/
+|   |   `-- ...
+|   |-- package.json
+|   `-- .gitignore
+`-- backend/
+    |-- pom.xml
+    `-- src/
+        |-- main/
+        |   |-- java/
+        |   `-- resources/
+        `-- test/
+```
+
+## Notes
+
+- Build tool is Maven only.
+- `frontend/` is optional and depends on selected structure.
+- Choose one of the four layouts above before generation to keep scripts and templates consistent.
