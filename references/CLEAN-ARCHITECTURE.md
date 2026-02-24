@@ -40,6 +40,14 @@ com.example.myapp
 |   |-- service/        # orchestrates use cases
 |   `-- mapper/
 |-- infrastructure/
+|   |-- security/
+|   |   |-- jwt/
+|   |   `-- adapter/
+|   |-- messaging/
+|   |   |-- broker/
+|   |   |   |-- producer/
+|   |   |   `-- consumer/
+|   |   `-- adapter/
 |   |-- persistence/
 |   |   |-- entity/
 |   |   |-- repository/
@@ -50,6 +58,7 @@ com.example.myapp
     |-- rest/
     |-- dto/
     |-- mapper/
+    |-- security/
     `-- advice/
 ```
 
@@ -75,11 +84,14 @@ Domain must not use:
 - Technical implementations of output ports.
 - JPA entities/repositories, external API clients, filesystem, messaging.
 - Maps persistence entities <-> domain models.
+- Security technical components (JWT utilities, password encoders, identity provider adapters).
+- Broker adapters (Kafka/RabbitMQ producers and consumers).
 
 ### Web (Input Adapter)
 - Controllers, request/response DTOs, validation, exception translation.
 - Calls input ports from `application`/`domain`.
 - Never expose persistence entities directly.
+- HTTP security entry points (filter chain, auth endpoints) belong in `web.security`.
 
 ## Port Pattern (Hexagonal Style Inside Clean Architecture)
 
@@ -90,6 +102,28 @@ Example:
 - `CreateOrderUseCase` in `port.in`.
 - `LoadCustomerPort`, `SaveOrderPort` in `port.out`.
 - Infrastructure implements `LoadCustomerPort` and `SaveOrderPort`.
+- For brokers: define a publish contract (for example `PublishEventPort`) in `port.out`, implement it in `infrastructure.messaging.broker.producer`.
+- For security: define contracts like `CurrentUserPort` / `TokenServicePort` in `port.out`, implement them in `infrastructure.security`.
+
+## Where to Put Security
+
+- `web/security/`
+  - HTTP-level security configuration and auth endpoints.
+- `infrastructure/security/`
+  - JWT/token provider implementation, password hashing, external identity integration.
+- `domain` and `application`
+  - Authorization rules/use-case checks through ports, without Spring Security types in domain.
+
+## Where to Put Brokers
+
+- `infrastructure/messaging/broker/producer/`
+  - Outbound event publishers implementing output ports.
+- `infrastructure/messaging/broker/consumer/`
+  - Inbound listeners that call use cases via input ports.
+- `domain/port/out/`
+  - Broker publishing contracts (for example `PublishOrderCreatedEventPort`).
+- `domain/port/in/` and `application/usecase/`
+  - Use cases invoked by broker consumers.
 
 ## Data Modeling Guidance
 
