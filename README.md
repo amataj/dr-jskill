@@ -71,6 +71,11 @@ Additional references:
 - [Docker Deployment](references/DOCKER.md)
 - [Testing Guide](references/TEST.md)
 - [Azure Deployment](references/AZURE.md)
+- [Books ETL Architecture Profile](references/BOOKS-ETL-ARCHITECTURE.md)
+- [Books ETL Package Layout](references/BOOKS-ETL-PACKAGE-LAYOUT.md)
+- [Books ETL Domain Patterns](references/BOOKS-ETL-DOMAIN-PATTERNS.md)
+- [Books ETL Adapters And Workflow](references/BOOKS-ETL-ADAPTERS-AND-WORKFLOW.md)
+- [Books ETL Generation Checklist](references/BOOKS-ETL-GENERATION-CHECKLIST.md)
 - **Versions manifest:** `versions.json` (read by `scripts/lib/versions.mjs`). Update this file first when bumping any tool/library version.
 
 ## Using This Skill with AI Assistants
@@ -234,4 +239,3 @@ This skill follows the [Agent Skills specification](https://agentskills.io/speci
 This project is licensed under the Apache License 2.0.
 
 See [LICENSE](LICENSE) file for details.
-

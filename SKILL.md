@@ -139,6 +139,26 @@ When creating Spring Boot projects:
 15. Enable GraalVM native image support for faster startup - see [GraalVM Guide](references/GRAALVM.md)
 16. The user must review changes before they are committed to git. Ask the user before initializing a Git repository, or running git commands.
 
+### Books ETL Architecture Profile
+
+When the user asks for the architecture used in the `books-etl` application, use these references together:
+
+- [Books ETL Architecture Profile](references/BOOKS-ETL-ARCHITECTURE.md)
+- [Books ETL Package Layout](references/BOOKS-ETL-PACKAGE-LAYOUT.md)
+- [Books ETL Domain Patterns](references/BOOKS-ETL-DOMAIN-PATTERNS.md)
+- [Books ETL Adapters And Workflow](references/BOOKS-ETL-ADAPTERS-AND-WORKFLOW.md)
+- [Books ETL Generation Checklist](references/BOOKS-ETL-GENERATION-CHECKLIST.md)
+
+This profile is a concrete clean-architecture variant with:
+- `interfaces -> application -> domain <- infrastructure`
+- feature-based packages such as `book`, `bookfile`, `bookpage`, `ingestrun`, `ingestevent`
+- command/query repository split in the domain
+- explicit `BeanConfiguration` wiring
+- shared pagination primitives
+- an optional `workflow` slice for Temporal-style orchestration
+
+Prefer this profile over the generic clean architecture guide when the goal is to reproduce the `books-etl` structure closely.
+
 ## Project Structure
 
 The service layer is only included if it adds value (e.g. complex business logic). For simple CRUD applications, the controller can directly call the repository.
