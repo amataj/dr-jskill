@@ -38,47 +38,43 @@ This guide covers creating front-end applications for Spring Boot using Angular 
 **Production Mode:**
 
 1. Angular app built and minified
-2. Static assets copied to `src/main/resources/static`
+2. Static assets copied to `backend/src/main/resources/static` when a backend module exists (use Angular's default `dist/` when the project is frontend-only)
 3. Served directly by Spring Boot
 
 ## Project Structure
 
-```text
-frontend/
-|-- angular.json
-|-- package.json
-|-- tsconfig.json
-|-- tsconfig.app.json
-|-- tsconfig.spec.json
-|-- .gitignore
-`-- src/
-    |-- index.html
-    |-- main.ts
-    |-- styles.css
-    |-- assets/
-    |-- environments/
-    |   |-- environment.ts
-    |   `-- environment.prod.ts
-    `-- app/
-        |-- app.component.ts
-        |-- app.component.html
-        |-- app.component.css
-        |-- app.config.ts
-        |-- app.routes.ts
-        |-- core/
-        |   |-- services/
-        |   |-- guards/
-        |   |-- interceptors/
-        |   `-- models/
-        |-- shared/
-        |   |-- components/
-        |   |-- directives/
-        |   `-- pipes/
-        `-- features/
-            |-- home/
-            |-- users/
-            `-- ...
 ```
+my-spring-boot-app/
+├── pom.xml                      # Root Maven aggregator (declares modules)
+├── backend/                     # Spring Boot backend module (present for backend or fullstack)
+│   ├── pom.xml
+│   └── src/
+│       └── main/
+│           ├── java/            # Spring Boot code
+│           └── resources/
+│               └── static/      # Populated by frontend production build
+└── frontend/                    # Angular module (present for frontend or fullstack)
+    ├── src/
+    │   ├── app/
+    │   │   ├── app.component.ts     # Root component
+    │   │   ├── app.component.html   # Root template
+    │   │   ├── app.routes.ts        # Routing configuration
+    │   │   ├── components/          # Shared components
+    │   │   ├── pages/               # Page components
+    │   │   ├── services/            # Services and API calls
+    │   │   └── models/              # TypeScript interfaces
+    │   ├── index.html               # HTML entry point
+    │   ├── main.ts                  # Angular bootstrap
+    │   └── styles.css               # Global styles
+    ├── angular.json                 # Angular configuration
+    ├── package.json                 # Node dependencies
+    ├── tsconfig.json                # TypeScript config
+    └── pom.xml                      # Optional wrapper for frontend-maven-plugin tasks
+```
+
+- Frontend-only projects keep just the `frontend/` module beside the aggregator POM.
+- Backend-only projects keep just the `backend/` module.
+- Fullstack projects include both modules so the Angular build can publish to `backend/src/main/resources/static`.
 
 ## Setup Instructions
 
@@ -101,7 +97,7 @@ npm install bootstrap
 
 ### 2. Configure Angular for Spring Boot Integration
 
-Update `frontend/angular.json` - modify the `build` section:
+Update `frontend/angular.json` - modify the `build` section (for fullstack projects, point output to the backend module):
 
 ```json
 {
@@ -110,7 +106,7 @@ Update `frontend/angular.json` - modify the `build` section:
       "architect": {
         "build": {
           "options": {
-            "outputPath": "../src/main/resources/static",
+            "outputPath": "../backend/src/main/resources/static",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [],
@@ -153,7 +149,7 @@ Create `frontend/proxy.conf.json`:
 
 ### 3. Configure Maven for Frontend Build
 
-Add to your `pom.xml`:
+Add to your `backend/pom.xml` (working directory points to the sibling `frontend` module):
 
 ```xml
 <build>
@@ -172,7 +168,7 @@ Add to your `pom.xml`:
             <artifactId>frontend-maven-plugin</artifactId>
             <version>1.15.1</version>
             <configuration>
-                <workingDirectory>frontend</workingDirectory>
+                <workingDirectory>../frontend</workingDirectory>
                 <installDirectory>target</installDirectory>
             </configuration>
             <executions>
