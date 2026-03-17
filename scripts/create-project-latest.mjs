@@ -5,7 +5,7 @@
 import {
   getJavaVersion, getBootPreferredMajor, getBootFallback,
   resolveBootVersion, joinDependencies, downloadAndExtractProject, parseArgs,
-  applyDotfiles,
+  applyDotfiles, applyBackendArchitecture,
 } from './lib/versions.mjs';
 
 const PREFERRED_BOOT_MAJOR = getBootPreferredMajor();
@@ -18,10 +18,13 @@ function usage() {
 Environment / Flags:
   --boot-version <version>   Override Spring Boot version (otherwise resolves preferred major with fallback)
   --project-type <type>      basic | web | fullstack (default: web)
+  --backend-architecture <style>
+                            clean | layered | etl
   -h|--help                  Show this help
 
 Examples:
   node scripts/create-project-latest.mjs myapp com.acme myapp com.acme.myapp 21 fullstack
+  node scripts/create-project-latest.mjs myapp com.acme myapp com.acme.myapp 25 web --backend-architecture etl
   node scripts/create-project-latest.mjs --boot-version 4.0.0-M1 myapp`);
 }
 
@@ -38,6 +41,7 @@ const artifactId = positional[2] || projectName;
 const packageName = positional[3] || `${groupId}.app`;
 const javaVersion = positional[4] || JAVA_VERSION_DEFAULT;
 const projectType = positional[5] || flags.projectType || 'web';
+const backendArchitecture = flags.backendArchitecture || '';
 
 const bootVersion = flags.bootVersion
   ? flags.bootVersion
@@ -85,9 +89,14 @@ await downloadAndExtractProject({
 const hasDatabase = projectType === 'fullstack';
 const hasFrontend = projectType === 'fullstack';
 applyDotfiles(projectName, { database: hasDatabase, frontend: hasFrontend });
+applyBackendArchitecture(projectName, { packageName, backendArchitecture });
 
 console.log('');
 console.log(`✓ Spring Boot project created successfully in ./${projectName}`);
+if (backendArchitecture) {
+  console.log(`  Backend architecture: ${backendArchitecture}`);
+  console.log('  Architecture guides copied to ./ARCHITECTURE.md and ./docs/architecture/');
+}
 console.log('');
 console.log('To get started:');
 console.log(`  cd ${projectName}`);

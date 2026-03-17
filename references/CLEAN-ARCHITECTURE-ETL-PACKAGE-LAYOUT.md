@@ -1,4 +1,4 @@
-# Books ETL Package Layout
+# ETL Package Layout
 
 ## Canonical Backend Layout
 
@@ -60,14 +60,14 @@ src/main/java/com/example/myapp/
 
 Each business feature should be represented consistently across layers:
 
-- `domain.book`
-- `application.book`
-- `interfaces.web.rest.BookResource`
-- `infrastructure.database.jpa.*Book*`
+- `domain.customerimport`
+- `application.customerimport`
+- `interfaces.web.rest.CustomerImportResource`
+- `infrastructure.database.jpa.*CustomerImport*`
 
 Apply the same pattern for:
-- `bookfile`
-- `bookpage`
+- `sourcefile`
+- `extractedrecord`
 - `ingestrun`
 - `ingestevent`
 - any new aggregate introduced later
@@ -101,7 +101,7 @@ Apply the same pattern for:
 
 ### Put in `infrastructure`
 - JPA mappings
-- Liquibase or database config if the project uses schema migration
+- Database configuration aligned with `spring.jpa.hibernate.ddl-auto`
 - Repository adapter implementations
 - External parser/OCR/filesystem/broker clients
 - Bean wiring that composes domain services from ports

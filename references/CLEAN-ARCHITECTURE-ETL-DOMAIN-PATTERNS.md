@@ -1,19 +1,19 @@
-# Books ETL Domain Patterns
+# ETL Domain Patterns
 
 ## Aggregate Shape
 
-The `books-etl` domain centers on these aggregates:
+An ETL-oriented domain often centers on aggregates such as:
 
-- `Book`
-- `BookFile`
-- `BookPageText`
+- `SourceDocument`
+- `SourceFile`
+- `ExtractedRecord`
 - `IngestRun`
 - `IngestEvent`
 
 Typical relationships:
-- `Book` is the aggregate root.
-- `BookFile` belongs to `Book` through `documentId` or `bookId`.
-- `BookPageText` belongs to `Book` and enforces `pageNo >= 1`.
+- `SourceDocument` is often the aggregate root for imported content.
+- `SourceFile` belongs to `SourceDocument` through `documentId` or a domain-specific foreign key.
+- `ExtractedRecord` belongs to `SourceDocument` and enforces ordering or uniqueness rules when needed.
 - `IngestEvent` references an `IngestRun`.
 
 ## Domain Model Guidance
@@ -28,15 +28,12 @@ For fresh generation, improve the current codebase and keep domain models framew
 
 Suggested fields:
 
-### `Book`
+### `SourceDocument`
 - `id`
 - `documentId`
-- `title`
-- `author`
-- `lang`
-- `pages`
+- domain-specific metadata fields
 
-### `BookFile`
+### `SourceFile`
 - `id`
 - `documentId`
 - `pathNorm`
@@ -44,11 +41,11 @@ Suggested fields:
 - `sizeBytes`
 - created/updated timestamps if needed
 
-### `BookPageText`
+### `ExtractedRecord`
 - `id`
 - `documentId`
-- `pageNo`
-- `text`
+- `recordKey`
+- `payload`
 
 ### `IngestRun`
 - `id`
@@ -80,19 +77,19 @@ Owns mutations, for example:
 Owns reads, for example:
 - `findById`
 - `findByDocumentId`
-- `findByTitle`
+- `findByBusinessKey`
 - `findAll(PageCriteria)`
 
-This keeps use-case orchestration explicit and matches the current `books-etl` package design.
+This keeps use-case orchestration explicit and matches the ETL clean-architecture package design.
 
 ## Domain Service Pattern
 
 Create one concrete domain service per aggregate:
 
 ```text
-domain/book/BookService.java
-domain/bookfile/BookFileService.java
-domain/bookpage/BookPageTextService.java
+domain/sourcedocument/SourceDocumentService.java
+domain/sourcefile/SourceFileService.java
+domain/extractedrecord/ExtractedRecordService.java
 domain/ingestrun/IngestRunService.java
 domain/ingestevent/IngestEventService.java
 ```

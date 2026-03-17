@@ -3,13 +3,15 @@
 
 import {
   getJavaVersion, resolveBootVersion, joinDependencies,
-  downloadAndExtractProject, parseArgs, applyDotfiles,
+  downloadAndExtractProject, parseArgs, applyDotfiles, applyBackendArchitecture,
 } from './lib/versions.mjs';
 
 function usage() {
   console.log(`Usage: node create-basic-project.mjs [PROJECT_NAME] [GROUP_ID] [ARTIFACT_ID] [PACKAGE_NAME] [JAVA_VERSION]
 Options:
   --boot-version <version>   Override Spring Boot version
+  --backend-architecture <style>
+                            clean | layered | etl
   -h|--help                  Show this help`);
 }
 
@@ -26,6 +28,7 @@ const artifactId = positional[2] || projectName;
 const packageName = positional[3] || `${groupId}.app`;
 const javaVersion = positional[4] || getJavaVersion();
 const bootVersion = flags.bootVersion || await resolveBootVersion();
+const backendArchitecture = flags.backendArchitecture || '';
 
 let dependencies = 'web,actuator,devtools,native';
 
@@ -46,6 +49,7 @@ await downloadAndExtractProject({
   dependencies,
 });
 applyDotfiles(projectName, { database: false, frontend: false });
+applyBackendArchitecture(projectName, { packageName, backendArchitecture });
 
 console.log(`✓ Basic Spring Boot project created successfully in ./${projectName}`);
 console.log(`  cd ${projectName}`);

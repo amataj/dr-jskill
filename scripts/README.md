@@ -8,6 +8,7 @@ This directory contains cross-platform JavaScript scripts (Node.js) to quickly c
 Cross-platform entrypoint. Delegates to `create-project-latest.mjs` via Node.js.
 ```bash
 node scripts/create-project my-app com.myco my-app com.myco.myapp 21 fullstack
+node scripts/create-project my-app com.myco my-app com.myco.myapp 25 web --backend-architecture etl
 ```
 
 ### 0. create-project-latest.mjs ⭐ RECOMMENDED
@@ -16,6 +17,7 @@ Creates a Spring Boot project using the **latest available Spring Boot version**
 **Usage:**
 ```bash
 node scripts/create-project-latest.mjs [project-name] [group-id] [artifact-id] [package-name] [java-version] [project-type] [--boot-version x.y.z]
+node scripts/create-project-latest.mjs [project-name] [group-id] [artifact-id] [package-name] [java-version] [project-type] [--backend-architecture clean|layered|etl]
 ```
 
 **Example:**
@@ -41,6 +43,7 @@ node scripts/create-project-latest.mjs my-app com.mycompany my-app com.mycompany
 - ✓ Supports Spring Boot 4.x and beyond
 - ✓ Flexible project types
 - ✓ Uses Java 25 by default
+- ✓ Optional backend architecture scaffolding (`clean`, `layered`, `etl`)
 
 ### 1. create-basic-project.mjs
 Creates a minimal Spring Boot project with essential dependencies.
@@ -48,6 +51,7 @@ Creates a minimal Spring Boot project with essential dependencies.
 **Usage:**
 ```bash
 node scripts/create-basic-project.mjs [project-name] [group-id] [artifact-id] [package-name] [java-version]
+node scripts/create-basic-project.mjs [project-name] [group-id] [artifact-id] [package-name] [java-version] --backend-architecture clean
 ```
 
 **Example:**
@@ -73,6 +77,7 @@ Creates a Spring Boot web application with REST API capabilities.
 **Usage:**
 ```bash
 node scripts/create-web-project.mjs [project-name] [group-id] [artifact-id] [package-name] [java-version]
+node scripts/create-web-project.mjs [project-name] [group-id] [artifact-id] [package-name] [java-version] --backend-architecture etl
 ```
 
 **Example:**
@@ -99,6 +104,7 @@ Creates a comprehensive Spring Boot application with database, security, and web
 **Usage:**
 ```bash
 node scripts/create-fullstack-project.mjs [project-name] [group-id] [artifact-id] [package-name] [java-version]
+node scripts/create-fullstack-project.mjs [project-name] [group-id] [artifact-id] [package-name] [java-version] --backend-architecture layered
 ```
 
 **Example:**

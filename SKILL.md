@@ -55,7 +55,8 @@ When the user asks to create a new project, follow this interaction flow:
 6. If the selected project type includes a backend (`2` or `3`), ask:
    - **"What type of backend architecture style?"**
    - `1- Clean Architecture`
-   - `2- Layered Architecture.`
+   - `2- Layered Architecture`
+   - `3- ETL Clean Architecture`
 7. Use the project name answer as:
    - `PROJECT_NAME` (the generated folder name)
    - `artifactId` (project name in generated metadata)
@@ -86,6 +87,7 @@ node scripts/create-project-latest.mjs my-app com.myco my-app com.myco.myapp 21 
 Flags supported:
 - `--boot-version <x.y.z>` / `-BootVersion`: override Spring Boot version
 - `--project-type basic|web|fullstack` / `-ProjectType`
+- `--backend-architecture clean|layered|etl`
 
 > Tip: The `create-project-latest` script auto-resolves preferred Boot 4.x and falls back to the configured `springBootFallback` if 4.x is not yet available. Override with `--boot-version` if needed.
 
@@ -139,15 +141,15 @@ When creating Spring Boot projects:
 15. Enable GraalVM native image support for faster startup - see [GraalVM Guide](references/GRAALVM.md)
 16. The user must review changes before they are committed to git. Ask the user before initializing a Git repository, or running git commands.
 
-### Books ETL Architecture Profile
+### ETL Clean Architecture Profile
 
-When the user asks for the architecture used in the `books-etl` application, use these references together:
+When the user asks for an ETL-oriented backend architecture profile, use these references together:
 
-- [Books ETL Architecture Profile](references/BOOKS-ETL-ARCHITECTURE.md)
-- [Books ETL Package Layout](references/BOOKS-ETL-PACKAGE-LAYOUT.md)
-- [Books ETL Domain Patterns](references/BOOKS-ETL-DOMAIN-PATTERNS.md)
-- [Books ETL Adapters And Workflow](references/BOOKS-ETL-ADAPTERS-AND-WORKFLOW.md)
-- [Books ETL Generation Checklist](references/BOOKS-ETL-GENERATION-CHECKLIST.md)
+- [ETL Clean Architecture Profile](references/CLEAN-ARCHITECTURE-ETL.md)
+- [ETL Package Layout](references/CLEAN-ARCHITECTURE-ETL-PACKAGE-LAYOUT.md)
+- [ETL Domain Patterns](references/CLEAN-ARCHITECTURE-ETL-DOMAIN-PATTERNS.md)
+- [ETL Adapters And Workflow](references/CLEAN-ARCHITECTURE-ETL-ADAPTERS-AND-WORKFLOW.md)
+- [ETL Generation Checklist](references/CLEAN-ARCHITECTURE-ETL-GENERATION-CHECKLIST.md)
 
 This profile is a concrete clean-architecture variant with:
 - `interfaces -> application -> domain <- infrastructure`
@@ -157,7 +159,7 @@ This profile is a concrete clean-architecture variant with:
 - shared pagination primitives
 - an optional `workflow` slice for Temporal-style orchestration
 
-Prefer this profile over the generic clean architecture guide when the goal is to reproduce the `books-etl` structure closely.
+Prefer this profile over the generic clean architecture guide when the goal is to create an ETL-oriented backend with opinionated package boundaries, repository-port split, and workflow support.
 
 ## Project Structure
 

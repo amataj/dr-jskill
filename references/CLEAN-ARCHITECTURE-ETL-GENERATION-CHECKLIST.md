@@ -1,6 +1,6 @@
-# Books ETL Generation Checklist
+# ETL Generation Checklist
 
-Use this checklist when generating a new project with the `books-etl` architecture profile.
+Use this checklist when generating a new project with the ETL Clean Architecture profile.
 
 ## Step 1
 

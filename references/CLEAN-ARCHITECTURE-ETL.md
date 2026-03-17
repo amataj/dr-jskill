@@ -1,10 +1,10 @@
-# Books ETL Architecture Profile
+# ETL Clean Architecture Profile
 
 ## Purpose
 
-Use this profile when generating a Spring Boot application that should follow the same backend architecture shape as `books-etl`.
+Use this profile when generating a Spring Boot application intended for ETL workloads across any business domain.
 
-This is not a generic clean architecture template. It is a pragmatic, JHipster-compatible variant with these top-level backend packages:
+This is not a generic clean architecture template. It is a pragmatic, opinionated variant with these top-level backend packages:
 
 ```text
 com.example.myapp
@@ -39,11 +39,11 @@ Additional notes:
 
 ### `domain`
 - Framework-light business layer.
-- Domain models live per feature package: `domain.book`, `domain.bookfile`, `domain.ingestrun`, etc.
+- Domain models live per feature package such as `domain.customerimport`, `domain.document`, `domain.pipeline`, or `domain.ingestrun`.
 - Split repository ports into:
   - `*CommandRepository` for writes
   - `*QueryRepository` for reads
-- Domain services are concrete classes such as `BookService`, `BookFileService`.
+- Domain services are concrete classes such as `CustomerImportService`, `DocumentService`, or `IngestRunService`.
 
 ### `application`
 - Defines adapter-facing use-case interfaces such as `BookUseCase`.
@@ -84,9 +84,9 @@ Additional notes:
 - Use `shared.pagination.PageCriteria` and `shared.pagination.PageResult` when domain read ports should avoid Spring Data types.
 - Keep JPA entities out of `domain` and `interfaces` contracts.
 
-## Known Gaps In The Current Books ETL Codebase
+## Generation Guidance
 
-The current `books-etl` codebase is still mid-migration. When generating a fresh project from this profile, improve on these weaknesses:
+When generating a fresh project from this profile, preserve the structure and improve on these common weaknesses:
 
 - Do not import JPA entities inside domain models.
 - Do not inject Spring Data repositories directly into REST controllers.
@@ -96,7 +96,7 @@ The current `books-etl` codebase is still mid-migration. When generating a fresh
 
 ## Generation Target
 
-When a user asks for "the books-etl architecture", generate a codebase that preserves:
+When a user asks for ETL Clean Architecture, generate a codebase that preserves:
 - the package layout,
 - the command/query repository split,
 - the application use-case layer,

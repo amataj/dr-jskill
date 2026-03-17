@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Shared version utilities for dr-jskill scripts
 
-import { readFileSync, writeFileSync, existsSync, unlinkSync, mkdirSync, copyFileSync, appendFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, unlinkSync, mkdirSync, copyFileSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
@@ -10,6 +10,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = process.env.ROOT_DIR || resolve(__dirname, '..', '..');
 const VERSIONS_FILE = process.env.VERSIONS_FILE || resolve(ROOT_DIR, 'versions.json');
 const ASSETS_DIR = resolve(ROOT_DIR, 'assets');
+const REFERENCES_DIR = resolve(ROOT_DIR, 'references');
 const DOTFILES_MARKER = '# === dr-jskill additions ===';
 
 /** Read a value from versions.json */
@@ -248,6 +249,226 @@ function writeTextFileIfMissing(destPath, content) {
   writeFileSync(destPath, content, 'utf8');
 }
 
+function copyFileIfMissing(sourcePath, destPath) {
+  if (!existsSync(sourcePath)) return;
+  if (existsSync(destPath)) return;
+  const destDir = dirname(destPath);
+  if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });
+  copyFileSync(sourcePath, destPath);
+}
+
+function normalizeBackendArchitecture(style) {
+  if (!style) return '';
+  const normalized = String(style).trim().toLowerCase();
+  if (normalized === 'clean') return 'clean';
+  if (normalized === 'layered') return 'layered';
+  if (normalized === 'books-etl' || normalized === 'etl') return 'etl';
+  throw new Error(
+    `Unknown backend architecture: ${style}. Valid options: clean, layered, etl`
+  );
+}
+
+function toPackageSuffix(relativeDir) {
+  return relativeDir.split('/').filter(Boolean).join('.');
+}
+
+function toJavaPackage(packageName, relativeDir = '') {
+  const suffix = toPackageSuffix(relativeDir);
+  return suffix ? `${packageName}.${suffix}` : packageName;
+}
+
+function writePackageInfo(projectDir, packageName, relativeDir, description) {
+  const javaPackage = toJavaPackage(packageName, relativeDir);
+  const target = join(
+    projectDir,
+    'src',
+    'main',
+    'java',
+    ...packageName.split('.'),
+    ...relativeDir.split('/').filter(Boolean),
+    'package-info.java'
+  );
+  writeTextFileIfMissing(
+    target,
+    `/**\n * ${description}\n */\npackage ${javaPackage};\n`
+  );
+}
+
+function copyArchitectureReferences(projectDir, fileNames) {
+  for (const fileName of fileNames) {
+    copyFileIfMissing(
+      join(REFERENCES_DIR, fileName),
+      join(projectDir, 'docs', 'architecture', fileName)
+    );
+  }
+}
+
+function writeArchitectureGuide(projectDir, style) {
+  const docsByStyle = {
+    clean: ['CLEAN-ARCHITECTURE.md'],
+    layered: ['LAYERED-ARCHITECTURE.md'],
+    etl: [
+      'CLEAN-ARCHITECTURE-ETL.md',
+      'CLEAN-ARCHITECTURE-ETL-PACKAGE-LAYOUT.md',
+      'CLEAN-ARCHITECTURE-ETL-DOMAIN-PATTERNS.md',
+      'CLEAN-ARCHITECTURE-ETL-ADAPTERS-AND-WORKFLOW.md',
+      'CLEAN-ARCHITECTURE-ETL-GENERATION-CHECKLIST.md',
+    ],
+  };
+  const labelsByStyle = {
+    clean: 'Clean Architecture',
+    layered: 'Layered Architecture',
+    etl: 'ETL Clean Architecture',
+  };
+  const files = docsByStyle[style] || [];
+  copyArchitectureReferences(projectDir, files);
+  const fileList = files
+    .map((fileName) => `- \`docs/architecture/${fileName}\``)
+    .join('\n');
+  writeTextFileIfMissing(
+    join(projectDir, 'ARCHITECTURE.md'),
+    `# Backend Architecture\n\nSelected style: **${labelsByStyle[style]}**.\n\nRead these project guides before implementing the first feature:\n${fileList}\n`
+  );
+}
+
+function applyCleanArchitecture(projectDir, packageName) {
+  const packages = [
+    ['domain/model', 'Domain models and aggregate roots.'],
+    ['domain/valueobject', 'Framework-free value objects.'],
+    ['domain/service', 'Domain services and business policies.'],
+    ['domain/exception', 'Domain-specific exceptions.'],
+    ['domain/port/in', 'Input ports defining supported use cases.'],
+    ['domain/port/out', 'Output ports for infrastructure dependencies.'],
+    ['application/usecase', 'Application use-case implementations.'],
+    ['application/service', 'Application orchestration services.'],
+    ['application/mapper', 'Mappers between application DTOs and domain models.'],
+    ['infrastructure/security/jwt', 'JWT technical components.'],
+    ['infrastructure/security/adapter', 'Security adapters implementing ports.'],
+    ['infrastructure/messaging/broker/producer', 'Outbound broker publishers.'],
+    ['infrastructure/messaging/broker/consumer', 'Inbound broker consumers.'],
+    ['infrastructure/messaging/adapter', 'Messaging adapters.'],
+    ['infrastructure/persistence/entity', 'Persistence entities.'],
+    ['infrastructure/persistence/repository', 'Spring Data repositories.'],
+    ['infrastructure/persistence/adapter', 'Persistence adapters implementing ports.'],
+    ['infrastructure/config', 'Infrastructure configuration and bean wiring.'],
+    ['infrastructure/external', 'External service clients and integrations.'],
+    ['web/rest', 'REST controllers.'],
+    ['web/dto', 'HTTP request and response DTOs.'],
+    ['web/mapper', 'Web mappers.'],
+    ['web/security', 'HTTP security entry points.'],
+    ['web/advice', 'Exception translation for HTTP APIs.'],
+  ];
+  for (const [relativeDir, description] of packages) {
+    writePackageInfo(projectDir, packageName, relativeDir, description);
+  }
+  writeArchitectureGuide(projectDir, 'clean');
+}
+
+function applyLayeredArchitecture(projectDir, packageName) {
+  const basePackage = `${packageName}.app`;
+  const packages = [
+    ['aop', 'Cross-cutting AOP support.'],
+    ['config', 'Spring configuration.'],
+    ['domain', 'Entities and core domain state.'],
+    ['management', 'Management and monitoring endpoints.'],
+    ['repository', 'Spring Data repositories.'],
+    ['security', 'Security components and utilities.'],
+    ['service', 'Transactional business services.'],
+    ['service/dto', 'Service-layer DTOs.'],
+    ['service/mapper', 'Service-layer mappers.'],
+    ['web/filter', 'HTTP filters.'],
+    ['web/rest', 'REST controllers.'],
+  ];
+  for (const [relativeDir, description] of packages) {
+    writePackageInfo(projectDir, basePackage, relativeDir, description);
+  }
+  writeArchitectureGuide(projectDir, 'layered');
+}
+
+function applyEtlArchitecture(projectDir, packageName) {
+  const packages = [
+    ['application', 'Adapter-facing use cases.'],
+    ['domain', 'Business models, ports, and domain services.'],
+    ['infrastructure', 'Technical adapters and configuration.'],
+    ['infrastructure/config', 'Explicit bean wiring and technical configuration.'],
+    ['infrastructure/database/jpa/adapter', 'JPA adapters implementing domain ports.'],
+    ['infrastructure/database/jpa/entity', 'JPA persistence entities.'],
+    ['infrastructure/database/jpa/mapper', 'Mappers between entities and domain models.'],
+    ['infrastructure/database/jpa/repository', 'Spring Data repositories.'],
+    ['interfaces', 'HTTP and external input adapters.'],
+    ['interfaces/web', 'Web configuration.'],
+    ['interfaces/web/rest', 'REST resources.'],
+    ['interfaces/web/rest/errors', 'HTTP exception translation.'],
+    ['shared', 'Cross-cutting primitives.'],
+    ['shared/pagination', 'Pagination primitives shared across features.'],
+    ['workflow', 'Long-running orchestration workflows.'],
+  ];
+  for (const [relativeDir, description] of packages) {
+    writePackageInfo(projectDir, packageName, relativeDir, description);
+  }
+  writeTextFileIfMissing(
+    join(
+      projectDir,
+      'src',
+      'main',
+      'java',
+      ...packageName.split('.'),
+      'shared',
+      'pagination',
+      'PageCriteria.java'
+    ),
+    `package ${packageName}.shared.pagination;\n\npublic record PageCriteria(int page, int size) {\n  public PageCriteria {\n    if (page < 0) {\n      throw new IllegalArgumentException("page must be >= 0");\n    }\n    if (size < 1) {\n      throw new IllegalArgumentException("size must be >= 1");\n    }\n  }\n}\n`
+  );
+  writeTextFileIfMissing(
+    join(
+      projectDir,
+      'src',
+      'main',
+      'java',
+      ...packageName.split('.'),
+      'shared',
+      'pagination',
+      'PageResult.java'
+    ),
+    `package ${packageName}.shared.pagination;\n\nimport java.util.List;\n\npublic record PageResult<T>(List<T> content, long totalElements, int page, int size) {\n}\n`
+  );
+  writeTextFileIfMissing(
+    join(
+      projectDir,
+      'src',
+      'main',
+      'java',
+      ...packageName.split('.'),
+      'infrastructure',
+      'config',
+      'BeanConfiguration.java'
+    ),
+    `package ${packageName}.infrastructure.config;\n\nimport org.springframework.context.annotation.Configuration;\n\n/**\n * Explicit composition root for domain services and use cases.\n */\n@Configuration\npublic class BeanConfiguration {\n}\n`
+  );
+  writeArchitectureGuide(projectDir, 'etl');
+}
+
+export function applyBackendArchitecture(projectDir, options = {}) {
+  const style = normalizeBackendArchitecture(options.backendArchitecture);
+  if (!style) return;
+  if (!options.packageName) {
+    throw new Error('packageName is required to scaffold backend architecture packages.');
+  }
+  switch (style) {
+    case 'clean':
+      applyCleanArchitecture(projectDir, options.packageName);
+      return;
+    case 'layered':
+      applyLayeredArchitecture(projectDir, options.packageName);
+      return;
+    case 'etl':
+      applyEtlArchitecture(projectDir, options.packageName);
+      return;
+    default:
+      throw new Error(`Unsupported backend architecture: ${style}`);
+  }
+}
+
 /**
  * Remove the frontend COPY lines from a Dockerfile when no frontend is present.
  */
@@ -323,6 +544,9 @@ export function parseArgs(argv) {
       i += 2;
     } else if (args[i] === '--project-type') {
       flags.projectType = args[i + 1];
+      i += 2;
+    } else if (args[i] === '--backend-architecture') {
+      flags.backendArchitecture = args[i + 1];
       i += 2;
     } else if (args[i] === '-h' || args[i] === '--help') {
       flags.help = true;
