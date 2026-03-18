@@ -4,6 +4,13 @@ This directory contains cross-platform JavaScript scripts (Node.js) to quickly c
 
 ## Available Scripts
 
+### ETL Clean Architecture bootstrap
+Experimental generator workspace for JDL-driven ETL Clean Architecture generation:
+```bash
+node scripts/cl-etl-generator/index.mjs --jdl /path/to/model.jdl
+node scripts/cl-etl-generator/index.mjs --jdl /path/to/model.jdl --output ./my-app --write
+```
+
 ### 🚀 Unified launcher (`scripts/create-project`)
 Cross-platform entrypoint. Delegates to `create-project-latest.mjs` via Node.js.
 ```bash

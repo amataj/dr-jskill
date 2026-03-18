@@ -57,10 +57,15 @@ When the user asks to create a new project, follow this interaction flow:
    - `1- Clean Architecture`
    - `2- Layered Architecture`
    - `3- ETL Clean Architecture`
-7. Use the project name answer as:
+7. If the selected project type includes a backend (`2` or `3`), ask:
+   - **"What is the path to the JDL file?"**
+   - This question is optional.
+   - If the user provides a JDL file path, use it as the domain-definition input.
+   - If the user leaves it empty, generate only the selected project bootstrap and architecture skeleton.
+8. Use the project name answer as:
    - `PROJECT_NAME` (the generated folder name)
    - `artifactId` (project name in generated metadata)
-8. If other values are missing (groupId, package), use skill defaults or ask follow-up questions.
+9. If other values are missing (groupId, package), use skill defaults or ask follow-up questions.
 
 Do not skip these questions when creating a new project.
 
