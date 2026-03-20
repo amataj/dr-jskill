@@ -57,8 +57,7 @@ When the user asks to create a new project, follow this interaction flow:
    - `1- Clean Architecture`
    - `2- Layered Architecture`
    - `3- ETL Clean Architecture`
-7. If the selected project type includes a backend (`2` or `3`), ask:
-   - **"What is the path to the JDL file?"**
+7. Ask: **"Do you have a JDL file? In case you do, what is the path to the JDL file?"**
    - This question is optional.
    - If the user provides a JDL file path, use it as the domain-definition input.
    - If the user leaves it empty, generate only the selected project bootstrap and architecture skeleton.
